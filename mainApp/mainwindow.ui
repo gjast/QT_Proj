@@ -6,26 +6,180 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>800</width>
-    <height>600</height>
+    <width>500</width>
+    <height>400</height>
    </rect>
   </property>
   <property name="windowTitle">
-   <string>MainWindow</string>
+   <string>Crypto Trading Platform</string>
   </property>
-  <widget class="QWidget" name="centralwidget"/>
-  <widget class="QMenuBar" name="menubar">
-   <property name="geometry">
-    <rect>
-     <x>0</x>
-     <y>0</y>
-     <width>800</width>
-     <height>21</height>
-    </rect>
-   </property>
+  <widget class="QWidget" name="centralwidget">
+   <layout class="QVBoxLayout" name="verticalLayout">
+    <item>
+     <widget class="QLabel" name="titleLabel">
+      <property name="styleSheet">
+       <string notr="true">font-weight: bold; font-size: 16px;</string>
+      </property>
+      <property name="text">
+       <string>Market Data</string>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QLabel" name="priceLabel">
+      <property name="text">
+       <string>current price: 101000</string>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QLabel" name="resistanceLabel">
+      <property name="text">
+       <string>resistance level: 105000</string>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QLabel" name="supportLabel">
+      <property name="text">
+       <string>support level: 95000</string>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QLabel" name="rsiLabel">
+      <property name="text">
+       <string>RSI: 33</string>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QLabel" name="macdLabel">
+      <property name="text">
+       <string>MACD: 49</string>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QFrame" name="line">
+      <property name="frameShape">
+       <enum>QFrame::Shape::HLine</enum>
+      </property>
+      <property name="frameShadow">
+       <enum>QFrame::Shadow::Sunken</enum>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QLabel" name="pairLabel">
+      <property name="text">
+       <string>Enter the name of the currency pair without spaces</string>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QLineEdit" name="pairEdit">
+      <property name="placeholderText">
+       <string>BTCUSDT</string>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QLabel" name="priceInputLabel">
+      <property name="text">
+       <string>price</string>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QLineEdit" name="priceEdit">
+      <property name="placeholderText">
+       <string>Enter price</string>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QPushButton" name="on_confirmButton_clicked">
+      <property name="text">
+       <string>Confirm</string>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <layout class="QHBoxLayout" name="horizontalLayout">
+      <item>
+       <widget class="QPushButton" name="buyButton">
+        <property name="text">
+         <string>Buy</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="sellButton">
+        <property name="text">
+         <string>Sell</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </item>
+   </layout>
   </widget>
-  <widget class="QStatusBar" name="statusbar"/>
  </widget>
  <resources/>
- <connections/>
+ <connections>
+  <connection>
+   <sender>on_confirmButton_clicked</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>on_confirmButton_clicked()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>20</x>
+     <y>20</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>20</x>
+     <y>20</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>buyButton</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>on_buyButton_clicked()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>20</x>
+     <y>20</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>20</x>
+     <y>20</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>sellButton</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>on_sellButton_clicked()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>20</x>
+     <y>20</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>20</x>
+     <y>20</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+ <slots>
+  <slot>on_confirmButton_clicked()</slot>
+  <slot>on_buyButton_clicked()</slot>
+  <slot>on_sellButton_clicked()</slot>
+ </slots>
 </ui>

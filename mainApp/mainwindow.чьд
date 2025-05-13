@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>400</width>
+    <height>300</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Currency Pair Input</string>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <layout class="QVBoxLayout" name="verticalLayout">
+    <item>
+     <widget class="QLabel" name="labelInstruction">
+      <property name="text">
+       <string>Enter the name of the
+currency pair without spaces
+BTCUSDT</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignmentFlag::AlignRight</set>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QLineEdit" name="currencyPairEdit">
+      <property name="placeholderText">
+       <string>e.g. BTCUSDT</string>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QLabel" name="labelPrice">
+      <property name="text">
+       <string>Price</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignmentFlag::AlignRight</set>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QLineEdit" name="priceEdit">
+      <property name="placeholderText">
+       <string>Enter price</string>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QPushButton" name="confirmButton">
+      <property name="styleSheet">
+       <string notr="true">background-color: #4CAF50; color: white; padding: 8px;</string>
+      </property>
+      <property name="text">
+       <string>Confirm</string>
+      </property>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+ </widget>
+ <resources/>
+ <connections>
+  <connection>
+   <sender>confirmButton</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>onConfirmClicked()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>20</x>
+     <y>20</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>20</x>
+     <y>20</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+ <slots>
+  <slot>onConfirmClicked()</slot>
+ </slots>
+</ui>

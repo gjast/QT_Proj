@@ -29,7 +29,7 @@ void AuthDialog::onLoginClicked()
     // Закрываем диалог авторизации
     this->accept();
 
-    // Открываем главное окно и передаем логин
-    MainWindow *mainWindow = new MainWindow(login);
-    mainWindow->show();
+    // Открываем главное окно
+    MainWindow *mainWindow = new MainWindow(); // Создаем экземпляр MainWindow
+    mainWindow->show(); // Показываем окно
 }
