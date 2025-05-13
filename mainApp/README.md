@@ -1,1 +1,0 @@
-# QT_App_for_inf
