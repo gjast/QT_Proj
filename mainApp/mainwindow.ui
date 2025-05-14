@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>500</width>
-    <height>400</height>
+    <width>471</width>
+    <height>444</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -61,6 +61,13 @@
      </widget>
     </item>
     <item>
+     <widget class="QLabel" name="forecastLabel">
+      <property name="text">
+       <string>forecast: BUY</string>
+      </property>
+     </widget>
+    </item>
+    <item>
      <widget class="QFrame" name="line">
       <property name="frameShape">
        <enum>QFrame::Shape::HLine</enum>
@@ -73,7 +80,7 @@
     <item>
      <widget class="QLabel" name="pairLabel">
       <property name="text">
-       <string>Enter the name of the currency pair without spaces</string>
+       <string>Enter the name of the currency pair without spaces BTCUSDT</string>
       </property>
      </widget>
     </item>
@@ -99,6 +106,34 @@
      </widget>
     </item>
     <item>
+     <layout class="QHBoxLayout" name="horizontalLayout_2">
+      <item>
+       <widget class="QLabel" name="label_2">
+        <property name="text">
+         <string>Take Profit</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLineEdit" name="takeProfit">
+        <property name="cursor">
+         <cursorShape>IBeamCursor</cursorShape>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLabel" name="label">
+        <property name="text">
+         <string>StopLoss</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLineEdit" name="stopLoss"/>
+      </item>
+     </layout>
+    </item>
+    <item>
      <widget class="QPushButton" name="on_confirmButton_clicked">
       <property name="text">
        <string>Confirm</string>
@@ -108,20 +143,27 @@
     <item>
      <layout class="QHBoxLayout" name="horizontalLayout">
       <item>
-       <widget class="QPushButton" name="buyButton">
+       <widget class="QPushButton" name="on_buyButton_clicked">
         <property name="text">
          <string>Buy</string>
         </property>
        </widget>
       </item>
       <item>
-       <widget class="QPushButton" name="sellButton">
+       <widget class="QPushButton" name="on_sellButton_clicked">
         <property name="text">
          <string>Sell</string>
         </property>
        </widget>
       </item>
      </layout>
+    </item>
+    <item>
+     <widget class="QPushButton" name="on_sellAllButton_clicked">
+      <property name="text">
+       <string>SELL ALL</string>
+      </property>
+     </widget>
     </item>
    </layout>
   </widget>
@@ -145,7 +187,7 @@
    </hints>
   </connection>
   <connection>
-   <sender>buyButton</sender>
+   <sender>on_buyButton_clicked</sender>
    <signal>clicked()</signal>
    <receiver>MainWindow</receiver>
    <slot>on_buyButton_clicked()</slot>
@@ -161,7 +203,7 @@
    </hints>
   </connection>
   <connection>
-   <sender>sellButton</sender>
+   <sender>on_sellButton_clicked</sender>
    <signal>clicked()</signal>
    <receiver>MainWindow</receiver>
    <slot>on_sellButton_clicked()</slot>
