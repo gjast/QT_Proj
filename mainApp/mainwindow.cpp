@@ -46,7 +46,7 @@ void MainWindow::updateMarketData()
     ui->supportLabel->setText("support level: -");
     ui->rsiLabel->setText("RSI: -");
     ui->macdLabel->setText("MACD: -");
-    ui->forecastLabel->setText("Forecast: Buy");
+    ui->forecastLabel->setText("Forecast: -");
 }
 
 void MainWindow::on_confirmButton_clicked()
