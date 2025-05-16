@@ -1,6 +1,9 @@
 #include "authdialog.h"
 #include "ui_authdialog.h"
 #include <QMessageBox>
+#include <QDebug>
+#include <QLocale>
+#include <QTimer>
 
 AuthDialog::AuthDialog(const QString &serverUrl, QWidget *parent) :
     QDialog(parent),
@@ -16,6 +19,10 @@ AuthDialog::AuthDialog(const QString &serverUrl, QWidget *parent) :
     // Подключаем сигналы от API клиента
     connect(m_apiClient, &TradingBotAPIClient::apiResponseReceived,
             this, &AuthDialog::handleApiResponse);
+
+    connect(m_apiClient, &TradingBotAPIClient::apiResponseReceived,
+            this, &AuthDialog::handleApiGetBalance);
+
     connect(m_apiClient, &TradingBotAPIClient::errorOccurred,
             this, &AuthDialog::handleError);
 }
@@ -41,14 +48,16 @@ void AuthDialog::onLoginClicked()
     // Показываем индикатор загрузки
     ui->loginButton->setEnabled(false);
     ui->loginButton->setText("Отправка...");
+
+
+        m_apiClient->getBalance();
+
 }
 
-void AuthDialog::handleApiResponse(const QJsonObject &response)
+void AuthDialog::handleApiGetBalance(const QJsonObject &response)
 {
-    // Проверяем, это ответ на установку ключей
-    if (response.contains("success") && response["success"].toBool()) {
-        QMessageBox::information(this, "Успех", "Вы вошли");
-
+    if (response.contains("USDT")) {
+        qDebug() << "USDT Balance:" << response["USDT"].toString();
         // Восстанавливаем кнопку перед закрытием
         ui->loginButton->setEnabled(true);
         ui->loginButton->setText("Войти");
@@ -62,9 +71,20 @@ void AuthDialog::handleApiResponse(const QJsonObject &response)
     }
 }
 
+void AuthDialog::handleApiResponse(const QJsonObject &response)
+{
+    // Проверяем, это ответ на установку ключей
+    // if (response.contains("success") && response["success"].toBool()) {
+    //     QMessageBox::information(this, "Успех", "Вы вошли");
+
+    // } else {
+    //     QMessageBox::information(this, "не Успех", "Вы не вошли");
+
+    // }
+}
+
 void AuthDialog::handleError(const QString &error)
 {
-    QMessageBox::critical(this, "Ошибка", "Вы не вошли: " + error);
 
     // Восстанавливаем кнопку
     ui->loginButton->setEnabled(true);

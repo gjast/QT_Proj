@@ -14,7 +14,7 @@ public:
     explicit TradingBotAPIClient(const QString &baseUrl, QObject *parent = nullptr);
 
     void setApiKeys(const QString &apiKey, const QString &apiSecret);
-    void startBot();
+    void startBot(const QString &symbol);
     void getMarketData(const QString &symbol, const QString &orderType = "linear");
     void getBalance();
     void getPrice(const QString &symbol, const QString &orderType = "linear");

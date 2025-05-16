@@ -4,6 +4,10 @@
 #include <tradingbotapiclient.h>
 #include <QDebug>
 #include <QLocale>
+#include <QJsonArray>    // Добавляем для работы с QJsonArray
+#include <QJsonObject>   // Для QJsonObject
+#include <QJsonValue>
+#include "infomainwindow.h"
 
 MainWindow::MainWindow(const QString &serverUrl, QWidget *parent)
     : QMainWindow(parent)
@@ -14,7 +18,8 @@ MainWindow::MainWindow(const QString &serverUrl, QWidget *parent)
     setWindowTitle("Crypto Trading Platform");
     resize(500, 400);
     connect(ui->on_sellAllButton_clicked, &QPushButton::clicked, this, &MainWindow::on_sellAllButton_clicked);
-
+    connect(ui->on_InfoButton_clicked, &QPushButton::clicked,
+            this, &MainWindow::on_InfoButton_clicked);
     // Установка стилей для кнопок
     ui->on_confirmButton_clicked->setStyleSheet("background-color: #4CAF50; color: white;");
     ui->on_buyButton_clicked->setStyleSheet("background-color: #2ECC71; color: white;");
@@ -25,10 +30,10 @@ MainWindow::MainWindow(const QString &serverUrl, QWidget *parent)
     connect(m_apiClient, &TradingBotAPIClient::apiResponseReceived,
             this, &MainWindow::handleApiResponse);
 
+
     connect(m_apiClient, &TradingBotAPIClient::apiResponseReceived,
             [](const QJsonObject &response) {
                 qDebug() << "Получен ответ от сервера:";
-                qDebug() << QJsonDocument(response).toJson(QJsonDocument::Indented);
             });
 
     updateMarketData();
@@ -45,7 +50,7 @@ void MainWindow::updateMarketData()
     ui->resistanceLabel->setText("resistance level: -");
     ui->supportLabel->setText("support level: -");
     ui->rsiLabel->setText("RSI: -");
-    ui->macdLabel->setText("MACD: -");
+    ui->macdLabel->setText("MACD:-\nsignal:-\nhistogram:-");
     ui->forecastLabel->setText("Forecast: -");
 }
 
@@ -78,6 +83,8 @@ void MainWindow::on_confirmButton_clicked()
     // Отправляем запросы
     m_apiClient->getMarketData(m_pair);
     m_apiClient->getPrice(m_pair);
+    m_apiClient->startBot(m_pair);
+
 }
 void MainWindow::handleApiResponse(const QJsonObject &response)
 {
@@ -86,11 +93,14 @@ void MainWindow::handleApiResponse(const QJsonObject &response)
         return;
     }
 
-    qDebug() << "Full API response:" << QJsonDocument(response).toJson(QJsonDocument::Indented);
+    // qDebug() << "Full API response:" << QJsonDocument(response).toJson(QJsonDocument::Indented);
 
     // Определяем тип ответа по содержимому
     if (response.contains("rsi") || response.contains("resistance") || response.contains("support")) {
         handleMarketDataResponse(response);
+    }
+    else if (response.contains("shouldBuy")) {
+        handleShouldBuy(response);
     }
     else if (response.contains("price")) {
         handlePriceResponse(response);
@@ -101,9 +111,26 @@ void MainWindow::handleApiResponse(const QJsonObject &response)
     }
 }
 
+
+void MainWindow::handleShouldBuy(const QJsonObject &response)
+{
+
+        if (response.contains("shouldBuy")) {
+                QString forecast = response["shouldBuy"].toBool() ? "Buy" : "Sell";
+                ui->forecastLabel->setText(QString("Forecast: %1").arg(forecast));
+            } else {
+                ui->forecastLabel->setText("Forecast: N/A");
+            }
+
+}
+
 void MainWindow::handleMarketDataResponse(const QJsonObject &response)
 {
     try {
+
+        double support = std::numeric_limits<double>::quiet_NaN();
+        double resistance = std::numeric_limits<double>::quiet_NaN();
+
         // Обрабатываем RSI
         if (response.contains("rsi")) {
             double rsiValue = response["rsi"].toDouble();
@@ -114,27 +141,47 @@ void MainWindow::handleMarketDataResponse(const QJsonObject &response)
 
         // Обрабатываем уровень сопротивления
         if (response.contains("resistance")) {
-            double resistance = response["resistance"].toDouble();
+            resistance = response["resistance"].toDouble();
             ui->resistanceLabel->setText(QString("Resistance: %1").arg(resistance, 0, 'f', 2));
         } else {
             ui->resistanceLabel->setText("Resistance: N/A");
         }
+        if (response.contains("macd")) {
+            double macd = round(response["macd"]["MACD"].toDouble() * 100) / 100;
+            double histogram = round(response["macd"]["histogram"].toDouble() * 100) / 100;
+            double signal = round(response["macd"]["signal"].toDouble() * 100) / 100;
+
+            qDebug() << "MACD values:" << macd << histogram << signal;
+
+            ui->macdLabel->setText(
+                QString("MACD: %1\nsignal: %2\nhistogram: %3")
+                    .arg(macd, 0, 'f', 2)
+                    .arg(signal, 0, 'f', 2)
+                    .arg(histogram, 0, 'f', 2)
+                );
+        }
 
         // Обрабатываем уровень поддержки
         if (response.contains("support")) {
-            double support = response["support"].toDouble();
+            support = response["support"].toDouble();
             ui->supportLabel->setText(QString("Support: %1").arg(support, 0, 'f', 2));
         } else {
             ui->supportLabel->setText("Support: N/A");
         }
+        if (response.contains("candles")) {
+            QJsonArray candlesArray = response["candles"].toArray();
+            allCandlesData.clear();  // Очищаем старые данные
 
-        // Обрабатываем прогноз
-        if (response.contains("shouldBuy")) {
-            QString forecast = response["shouldBuy"].toBool() ? "Buy" : "Sell";
-            ui->forecastLabel->setText(QString("Forecast: %1").arg(forecast));
-        } else {
-            ui->forecastLabel->setText("Forecast: N/A");
+            for (const QJsonValue& candleValue : candlesArray) {
+                QList<QString> singleCandle;
+                for (const QJsonValue& field : candleValue.toArray()) {
+                    singleCandle.append(field.toString());
+                }
+                allCandlesData.append(singleCandle);
+            }
         }
+        lastSupport = support;
+        lastResistance = resistance;
 
     } catch (const std::exception &e) {
         qDebug() << "Error processing market data:" << e.what();
@@ -181,31 +228,82 @@ void MainWindow::handlePriceResponse(const QJsonObject &response)
 
 void MainWindow::on_buyButton_clicked()
 {
-    QMessageBox msgBox(this);
-    msgBox.setWindowTitle("Buy Order");
-    msgBox.setText("Buy order placed!");
-    msgBox.setModal(true);
-    msgBox.exec();
-    m_apiClient->placeLeveragedOrder(m_pair, "Buy", m_price, m_takeProfit, m_stopLoss);
+    if (m_takeProfit.isEmpty() || m_stopLoss.isEmpty() || m_pair.isEmpty()) {
+        QMessageBox::warning(this,
+                             "Incomplete Data",
+                             "Please fill all fields (Take Profit, Stop Loss, Pair)");
+        return;
+    }
+    try {
+        m_apiClient->placeLeveragedOrder(m_pair, "Buy", m_price, m_takeProfit, m_stopLoss);
+
+        QMessageBox::information(this,
+                                 "Sell Order",
+                                 "All orders cancelled successfully!");
+    }
+    catch (const std::exception& e) {
+        QMessageBox::critical(this,
+                              "Error",
+                              QString("Failed to cancel orders: %1").arg(e.what()));
+    }
 }
 
 void MainWindow::on_sellButton_clicked()
 {
-    QMessageBox msgBox(this);
-    msgBox.setWindowTitle("Sell Order");
-    msgBox.setText("Sell order placed!");
-    msgBox.setModal(true);
-    msgBox.exec();
-    m_apiClient->placeLeveragedOrder(m_pair, "Sell", m_price, m_takeProfit, m_stopLoss);
+    if (m_takeProfit.isEmpty() || m_stopLoss.isEmpty() || m_pair.isEmpty()) {
+        QMessageBox::warning(this,
+                             "Incomplete Data",
+                             "Please fill all fields (Take Profit, Stop Loss, Pair)");
+        return; // Прерываем выполнение, если данные неполные
+    }
+    try {
+        m_apiClient->placeLeveragedOrder(m_pair, "Sell", m_price, m_takeProfit, m_stopLoss);
+
+        // Показываем уведомление об успехе только если запрос выполнен
+        QMessageBox::information(this,
+                                 "Sell Order",
+                                 "All orders cancelled successfully!");
+    }
+    catch (const std::exception& e) {
+        // Обработка ошибок API
+        QMessageBox::critical(this,
+                              "Error",
+                              QString("Failed to cancel orders: %1").arg(e.what()));
+    }
+
+
 }
 
 void MainWindow::on_sellAllButton_clicked()
 {
-    m_apiClient->cancelAllOrders();
-    QMessageBox msgBox(this);
-    msgBox.setWindowTitle("Sell Order");
-    msgBox.setText("Sell order placed!");
-    msgBox.setModal(true);
-    msgBox.exec();
+
+    try {
+        // Выполняем запрос на отмену всех ордеров
+        m_apiClient->cancelAllOrders();
+
+        // Показываем уведомление об успехе только если запрос выполнен
+        QMessageBox::information(this,
+                                 "Sell Order",
+                                 "All orders cancelled successfully!");
+    }
+    catch (const std::exception& e) {
+        // Обработка ошибок API
+        QMessageBox::critical(this,
+                              "Error",
+                              QString("Failed to cancel orders: %1").arg(e.what()));
+    }
 }
 
+
+void MainWindow::on_InfoButton_clicked()
+{
+
+    InfoMainWindow *infoWindow = new InfoMainWindow(this);
+    infoWindow->setInfo("Информация", "Это новое информационное окно");
+    if (!allCandlesData.isEmpty()) {
+        infoWindow->setMarketData(allCandlesData, lastSupport, lastResistance);
+    } else {
+        qDebug() << "No candles data available";
+    }
+    infoWindow->show();
+}

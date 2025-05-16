@@ -18,6 +18,7 @@ public:
 
 private slots:
     void onLoginClicked();
+    void handleApiGetBalance(const QJsonObject &response);
     void handleApiResponse(const QJsonObject &response);
     void handleError(const QString &error);
 

@@ -16,14 +16,25 @@
   <widget class="QWidget" name="centralwidget">
    <layout class="QVBoxLayout" name="verticalLayout">
     <item>
-     <widget class="QLabel" name="titleLabel">
-      <property name="styleSheet">
-       <string notr="true">font-weight: bold; font-size: 16px;</string>
-      </property>
-      <property name="text">
-       <string>Market Data</string>
-      </property>
-     </widget>
+     <layout class="QHBoxLayout" name="horizontalLayout_6">
+      <item>
+       <widget class="QLabel" name="titleLabel">
+        <property name="styleSheet">
+         <string notr="true">font-weight: bold; font-size: 16px;</string>
+        </property>
+        <property name="text">
+         <string>Market Data</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="on_InfoButton_clicked">
+        <property name="text">
+         <string>Info</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
     </item>
     <item>
      <widget class="QLabel" name="priceLabel">

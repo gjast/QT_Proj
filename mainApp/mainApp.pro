@@ -1,4 +1,4 @@
-QT += network core gui widgets
+QT += network core gui widgets printsupport
 CONFIG += console
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -10,17 +10,22 @@ CONFIG += c++17
 
 SOURCES += \
     authdialog.cpp \
+    infomainwindow.cpp \
     main.cpp \
     mainwindow.cpp \
+    qcustomplot.cpp \
     tradingbotapiclient.cpp
 
 HEADERS += \
     authdialog.h \
+    infomainwindow.h \
     mainwindow.h \
+    qcustomplot.h \
     tradingbotapiclient.h
 
 FORMS += \
     authdialog.ui \
+    infomainwindow.ui \
     mainwindow.ui \
 
 # Default rules for deployment.

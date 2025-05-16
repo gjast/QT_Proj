@@ -22,9 +22,13 @@ void TradingBotAPIClient::setApiKeys(const QString &apiKey, const QString &apiSe
     sendPostRequest("/api/set-keys", keysData);
 }
 
-void TradingBotAPIClient::startBot()
+void TradingBotAPIClient::startBot(const QString &symbol)
 {
-    sendPostRequest("/start-bot", QJsonObject());
+    QJsonObject jsonParams;
+    jsonParams["symbol"] = symbol;
+
+    sendPostRequest("/start-bot", jsonParams);
+
 }
 
 void TradingBotAPIClient::getMarketData(const QString &symbol, const QString &orderType)
