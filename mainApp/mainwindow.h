@@ -26,6 +26,7 @@ private slots:
 
 private:
     void updateMarketData();
+    void handleGetBalance(const QJsonObject &response);
     void handleShouldBuy(const QJsonObject &response);
     void handleMarketDataResponse(const QJsonObject &response);
     void handlePriceResponse(const QJsonObject &response);

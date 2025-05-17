@@ -50,7 +50,6 @@ void AuthDialog::onLoginClicked()
     ui->loginButton->setText("Отправка...");
 
 
-        m_apiClient->getBalance();
 
 }
 
@@ -73,14 +72,10 @@ void AuthDialog::handleApiGetBalance(const QJsonObject &response)
 
 void AuthDialog::handleApiResponse(const QJsonObject &response)
 {
-    // Проверяем, это ответ на установку ключей
-    // if (response.contains("success") && response["success"].toBool()) {
-    //     QMessageBox::information(this, "Успех", "Вы вошли");
-
-    // } else {
-    //     QMessageBox::information(this, "не Успех", "Вы не вошли");
-
-    // }
+    //Проверяем, это ответ на установку ключей
+    if (response.contains("success") && response["success"].toBool()) {
+        m_apiClient->getBalance();
+    }
 }
 
 void AuthDialog::handleError(const QString &error)

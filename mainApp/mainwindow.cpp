@@ -52,6 +52,8 @@ void MainWindow::updateMarketData()
     ui->rsiLabel->setText("RSI: -");
     ui->macdLabel->setText("MACD:-\nsignal:-\nhistogram:-");
     ui->forecastLabel->setText("Forecast: -");
+    m_apiClient->getBalance();
+
 }
 
 void MainWindow::on_confirmButton_clicked()
@@ -83,6 +85,7 @@ void MainWindow::on_confirmButton_clicked()
     // Отправляем запросы
     m_apiClient->getMarketData(m_pair);
     m_apiClient->getPrice(m_pair);
+    m_apiClient->getBalance();
     m_apiClient->startBot(m_pair);
 
 }
@@ -102,6 +105,11 @@ void MainWindow::handleApiResponse(const QJsonObject &response)
     else if (response.contains("shouldBuy")) {
         handleShouldBuy(response);
     }
+    else if(response.contains("USDT"))
+    {
+
+        handleGetBalance(response);
+    }
     else if (response.contains("price")) {
         handlePriceResponse(response);
     }
@@ -111,6 +119,15 @@ void MainWindow::handleApiResponse(const QJsonObject &response)
     }
 }
 
+void MainWindow::handleGetBalance(const QJsonObject &response)
+{
+    if (response.contains("USDT")) {
+        QString balanceStr = response["USDT"].toString();  // Получаем баланс (например: "123.4567")
+        double balance = balanceStr.toDouble();           // Конвертируем в число
+        ui->balanceLabel->setText(QString("Balance: $%1").arg(balance, 0, 'f', 2));  // Форматируем
+
+    }
+}
 
 void MainWindow::handleShouldBuy(const QJsonObject &response)
 {
@@ -240,6 +257,8 @@ void MainWindow::on_buyButton_clicked()
         QMessageBox::information(this,
                                  "Sell Order",
                                  "All orders cancelled successfully!");
+        m_apiClient->getBalance();
+
     }
     catch (const std::exception& e) {
         QMessageBox::critical(this,
@@ -263,6 +282,8 @@ void MainWindow::on_sellButton_clicked()
         QMessageBox::information(this,
                                  "Sell Order",
                                  "All orders cancelled successfully!");
+        m_apiClient->getBalance();
+
     }
     catch (const std::exception& e) {
         // Обработка ошибок API
@@ -285,6 +306,8 @@ void MainWindow::on_sellAllButton_clicked()
         QMessageBox::information(this,
                                  "Sell Order",
                                  "All orders cancelled successfully!");
+        m_apiClient->getBalance();
+
     }
     catch (const std::exception& e) {
         // Обработка ошибок API

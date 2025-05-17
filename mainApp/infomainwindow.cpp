@@ -129,23 +129,19 @@ void InfoMainWindow::setMarketData(const QList<QList<QString>>& candlesData,
 
             financialData.append(data);
 
-            // Обновляем мин/макс для масштабирования
             minPrice = qMin(minPrice, candle[3].toDouble());
             maxPrice = qMax(maxPrice, candle[2].toDouble());
         }
     }
 
-    // Очищаем предыдущий график
     customPlot->clearPlottables();
     customPlot->clearItems();
 
-    // Создаем график свечей
     QCPFinancial *candlesticks = new QCPFinancial(customPlot->xAxis, customPlot->yAxis);
     candlesticks->setName("4-Hour Candles");
     candlesticks->setChartStyle(QCPFinancial::csCandlestick);
     candlesticks->data()->set(financialData);
 
-    // Настройка свечей
     candlesticks->setWidth(4*3600*0.7); // Ширина 4-часовой свечи (70% от интервала)
     candlesticks->setTwoColored(true);
     candlesticks->setBrushPositive(QColor(0, 150, 0));
@@ -153,15 +149,12 @@ void InfoMainWindow::setMarketData(const QList<QList<QString>>& candlesData,
     candlesticks->setPenPositive(QPen(QColor(0, 100, 0)));
     candlesticks->setPenNegative(QPen(QColor(100, 0, 0)));
 
-    // Настройка оси X для отображения даты/времени
-
     QSharedPointer<QCPAxisTickerDateTime> dateTicker(new QCPAxisTickerDateTime);
-    dateTicker->setDateTimeFormat("dd.MM.yy\nhh:mm"); // Формат: дата и время с переносом
+    dateTicker->setDateTimeFormat("dd.MM.yy\nhh:mm");
     customPlot->xAxis->setTicker(dateTicker);
     customPlot->xAxis->setLabel("Дата и время");
     customPlot->yAxis->setLabel("Цена");
 
-    // Устанавливаем диапазоны с небольшим запасом
     double priceRange = maxPrice - minPrice;
     customPlot->yAxis->setRange(minPrice - priceRange*0.05, maxPrice + priceRange*0.05);
 
@@ -205,37 +198,3 @@ void InfoMainWindow::setMarketData(const QList<QList<QString>>& candlesData,
         << "-" << QDateTime::fromSecsSinceEpoch(timeKeys.last()).toString();
     }
 }
-// void InfoMainWindow::setupCandlestickChart()
-// {
-//     // Подготовка данных (пример)
-//     QVector<QCPFinancialData> data;
-//     data << QCPFinancialData(1, 10, 13, 9, 11);  // time, open, high, low, close
-//     data << QCPFinancialData(2, 11, 15, 10, 14);
-//     data << QCPFinancialData(3, 14, 16, 12, 13);
-//     data << QCPFinancialData(4, 13, 14, 11, 12);
-//     data << QCPFinancialData(5, 12, 13, 9, 10);
-
-//     // Создание графика свечей
-//     QCPFinancial *candlesticks = new QCPFinancial(customPlot->xAxis, customPlot->yAxis);
-//     candlesticks->setName("Candlesticks");
-//     candlesticks->setChartStyle(QCPFinancial::csCandlestick);
-//     candlesticks->data()->set(data);
-
-//     // Настройка цветов
-//     candlesticks->setWidth(0.5);
-//     candlesticks->setTwoColored(true);
-//     candlesticks->setBrushPositive(QColor(0, 255, 0)); // Зеленый для роста
-//     candlesticks->setBrushNegative(QColor(255, 0, 0)); // Красный для падения
-//     candlesticks->setPenPositive(QPen(QColor(0, 180, 0)));
-//     candlesticks->setPenNegative(QPen(QColor(180, 0, 0)));
-
-//     // Настройка осей
-//     customPlot->xAxis->setLabel("Time");
-//     customPlot->yAxis->setLabel("Price");
-//     customPlot->xAxis->setRange(0, 85); // Подберите диапазон под ваши данные
-//     customPlot->yAxis->setRange(8, 17); // support resistance
-
-//     // Включаем легенду и обновляем график
-//     customPlot->legend->setVisible(true);
-//     customPlot->replot();
-// }

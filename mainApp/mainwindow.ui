@@ -28,6 +28,13 @@
        </widget>
       </item>
       <item>
+       <widget class="QLabel" name="balanceLabel">
+        <property name="text">
+         <string>Balance: -</string>
+        </property>
+       </widget>
+      </item>
+      <item>
        <widget class="QPushButton" name="on_InfoButton_clicked">
         <property name="text">
          <string>Info</string>
