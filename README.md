@@ -35,11 +35,10 @@
 ### **C++**
 - ![QT](https://img.shields.io/badge/-QT-41CD52?style=flat-square) - фреймворк для разработки GUI
 - ![qcustomplot](https://img.shields.io/badge/-qcustomplot-1793D1?style=flat-square) - продвинутая визуализация графиков
+<div align="center">
+Star on GitHub
+Watch on GitHub
 
-## 📈 Пример работы с индикаторами
+</div> ```
 
-```javascript
-// Пример расчета RSI
-const { RSI } = require('technicalindicators');
-const rsi = RSI.calculate({ period: 14, values: prices });
-console.log(`Текущий RSI: ${rsi[rsi.length - 1]}`);
+
