@@ -38,6 +38,8 @@
 Star on GitHub
 Watch on GitHub
 
-</div> ```
+</div> 
+
+Выполнили Пономаре Кирилл, Тамаков Андрей
 
 
