@@ -1,8 +1,8 @@
 # 💹 Автоматизация рабочего места биржевого брокера  
 ### *Творческий проект по созданию профессионального торгового инструмента*  
 
-![Trading Dashboard](https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExcDl1d3V6b2FmY2V4dW1xZ3B0Z2V4N2x6eGZ2eHhha3Y0bGJtYyZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/RLVHPJJv7jKB1mONQh/giphy.gif)
-
+![Trading Terminal](https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExcW0xYnJtNXRqY2R6dWl1cG0yZ3B5Z2V6Y2ZqZzZ1bmR6dGJmZyZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/l0HU7JIWJryq7fWOk/giphy.gif)
+*"Профессиональный инструмент для алгоритмической торговли"*
 ## 🚀 Этапы разработки
 
 | Этап | Описание | Статус |
